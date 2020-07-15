@@ -2,20 +2,22 @@ package com.example.servingwebcontent;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-@Controller
-public class GreetingController {
+@RestController
+@RequestMapping("/api")
+public class VirusController {
 
-	@GetMapping("/greeting")
-	public String greeting(@RequestParam(name = "country", required = false, defaultValue = "All") String country,
+	@GetMapping("/world")
+	public String getAllContry(@RequestParam(defaultValue = "All", required = false, name = "name") String country,
 			Model model) {
 
 		try {
@@ -35,7 +37,6 @@ public class GreetingController {
 						model.addAttribute("country", array_element.toString());
 						break;
 					}
-					continue;
 				}
 			}
 
@@ -43,8 +44,19 @@ public class GreetingController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		return "greeting";
+		return (String) model.getAttribute("country");
 	}
 
+
+	@GetMapping("/country")
+	public String getByCountry(@RequestParam(name = "name", required = false, defaultValue = "All") String country,
+			Model model) {
+		getAllContry(country, model);
+		return (String) model.getAttribute("country");
+	}
+
+	@GetMapping("/index")
+	String index() {
+		return "index";
+	}
 }
