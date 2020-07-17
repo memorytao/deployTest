@@ -2,7 +2,10 @@ package com.example.servingwebcontent;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +17,12 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-
 @RestController
 @RequestMapping("/api")
 public class VirusController {
 	
+	@Autowired
+	private Environment environment;
 
 	@CrossOrigin(origins = "${fix.cores}")
 	@GetMapping("/world")
@@ -52,6 +56,11 @@ public class VirusController {
 		return (String) model.getAttribute("country");
 	}
 
+	@CrossOrigin(origins = "${fix.cores}")
+	@GetMapping("/config")
+	String getConfigAPIs() {
+		return environment.getProperty("conf.api.url.world");
+	}
 
 	@GetMapping("/country")
 	public String getByCountry(@RequestParam(name = "name", required = false, defaultValue = "All") String country,
